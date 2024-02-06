@@ -1,0 +1,3 @@
+- Fortune JSON data taken from https://github.com/JamesFT/Database-Quotes-JSON/ (I did some light editing). 
+- client-config contains files necessary for the client application.
+- server-config contains files necessary for the server application (service/daemon).
