@@ -31,7 +31,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         description="Compile source code">
     <!-- Compile the Java code from ${src} into ${build} -->
 
-      <javac includeantruntime="false"
+      <javac includeantruntime="true"
       srcdir="${src}" destdir="${build}" debug="true"
       debuglevel="lines,vars,source" classpath="lib/merrimackutil.jar">
       <compilerarg value="-Xlint:deprecation,unchecked" />

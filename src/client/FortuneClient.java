@@ -65,6 +65,7 @@ public class FortuneClient extends JFrame {
         String selectedOption = (String) optionsComboBox.getSelectedItem();
         if (!message.isEmpty()) {
             sender.println("Message:" + message);
+            showSuccessMessage();
         } else {
             JOptionPane.showMessageDialog(this, "Please enter a message.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -73,6 +74,11 @@ public class FortuneClient extends JFrame {
     private void sendType() {
         String selectedOption = (String) optionsComboBox.getSelectedItem();
         sender.println("TYPE:" + selectedOption);
+        showSuccessMessage();
+    }
+
+    private void showSuccessMessage() {
+        JOptionPane.showMessageDialog(this, "Request sent successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void main(String[] args) {
