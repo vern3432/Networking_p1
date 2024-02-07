@@ -11,7 +11,7 @@ import java.net.Socket;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashMap; // import the HashMap class
+import java.util.HashMap; 
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -61,15 +61,15 @@ public class FortuneServer {
         String author = quoteObject.getString("author");
         String quote = quoteObject.getString("quote");
 
-        // Check if the quote already exists for the author
+        // see if the quote already exists for the author
         if (quotesByAuthor.containsKey(author)) {
           List<String> quotesList = quotesByAuthor.get(author);
-          // Check if the quote already exists in the list
+          // check if the quote already exists in the list
           if (!quotesList.contains(quote)) {
             quotesList.add(quote);
           }
         } else {
-          // If the author does not exist in the map, create a new list and add the quote to it
+          // if the author does not exist in the map, create a new list and add the quote to it
           List<String> quotesList = new ArrayList<>();
           quotesList.add(quote);
           quotesByAuthor.put(author, quotesList);
@@ -92,10 +92,10 @@ public class FortuneServer {
       //map/values gives you all values as list, just do this as random
       //quotes
 
-      //start server
+      //start server after proccessing
       ServerSocket server = new ServerSocket(portint);
       System.out.println("Server Running at port:" + portint);
-      // Loop forever handling connections.(Integer)
+      // loop forever handling connections.(Integer)
       while (true) {
         Socket sock = server.accept();
 
