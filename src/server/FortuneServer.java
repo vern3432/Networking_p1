@@ -5,14 +5,13 @@ import java.net.ServerSocket;
 import java.util.Scanner;
 import java.io.PrintWriter;
 import java.io.IOException;
-import merrimack.util.json.JsonIO;
 
 
 
 public class FortuneServer {
 
     public static void main(String[] args) {
-        JsonIO.readObject(File);
+        // JsonIO.readObject(File);
 
         try {
             ServerSocket server = new ServerSocket(5000);
