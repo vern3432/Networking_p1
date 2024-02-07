@@ -2,7 +2,10 @@ package server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -11,11 +14,18 @@ public class FortuneServer {
   public static void main(String[] args) {
     try {
       ServerSocket server = new ServerSocket(5000);
+  public static void main(String[] args) {
+    try {
+      ServerSocket server = new ServerSocket(5000);
 
       // Loop forever handling connections.
       while (true) {
         Socket sock = server.accept();
+      // Loop forever handling connections.
+      while (true) {
+        Socket sock = server.accept();
 
+        System.out.println("Connection received.");
         System.out.println("Connection received.");
 
         Scanner recv = new Scanner(sock.getInputStream());
@@ -31,6 +41,7 @@ public class FortuneServer {
           // Printing the received message
           if (receivedObject instanceof String) {
             String receivedObject2 = receivedObject.toString();
+
             if (receivedObject2.startsWith("Message:")) {
               System.out.println("Received message: " + receivedObject2);
             } else if (receivedObject2.startsWith("TYPE:")) {
@@ -44,13 +55,26 @@ public class FortuneServer {
 
           // Sending something back to client
 
+
+          // Sending a message back to the client
           send.println("Server: Message received from client - " + line);
 
           if (line.equalsIgnoreCase("exit")) {
             break;
           }
         }
+          if (line.equalsIgnoreCase("exit")) {
+            break;
+          }
+        }
 
+        // Close the connection.
+        sock.close();
+      }
+    } catch (IOException ioe) {
+      ioe.printStackTrace();
+    }
+  }
         // Close the connection.
         sock.close();
       }

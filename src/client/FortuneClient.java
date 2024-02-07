@@ -128,15 +128,38 @@ public class FortuneClient extends JFrame {
     );
   }
 
-  private void connectToServer() {
-    try {
-      socket = new Socket("127.0.0.1", 5000);
-      // ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-      // System.out.println("object:");
-      receiver = new Scanner(socket.getInputStream());
-      sender = new PrintWriter(socket.getOutputStream(), true);
-    } catch (IOException e) {
-      e.printStackTrace();
+    private void connectToServer() {
+        try {
+            socket = new Socket("127.0.0.1", 5000);
+            receiver = new Scanner(socket.getInputStream());
+            sender = new PrintWriter(socket.getOutputStream(), true);
+
+            new Thread(this::recieveMessages).start();
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to connect to the server.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
-  }
+
+    private void recieveMessages(){
+        try{
+            while(receiver.hasNextLine()){
+                String response = receiver.nextLine();
+                SwingUtilities.invokeLater(() -> responseArea.append(response + "\n"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @Override
+    public void dispose(){
+        super.dispose();
+        try{
+            if(socket != null) socket.close();
+            if(sender != null) sender.close();
+            if(receiver != null) receiver.close();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 }
