@@ -18,6 +18,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <description>
     Builds the SSL password authentication client and server.
   </description>
+
+
+  
   <!-- set global properties for this build -->
   <property name="src" location="src"/>
   <property name="build" location="build"/>
@@ -56,6 +59,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         <attribute name="Main-Class" value="server.FortuneServer" />
       </manifest>
     </jar>
+
+        <loadfile property="server_config" srcFile="${basedir}/src/server/config.json"/>  
+        <echo message="${server_config}"></echo>
+        
+
+
+      
   </target>
 
 
