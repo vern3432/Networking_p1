@@ -38,10 +38,9 @@ public class FortuneServer {
 
           // Storing the received message as an object
           Object receivedObject = line;
-
           // Printing the received message
           if (receivedObject instanceof String) {
-            String receivedObject2=receivedObject.toString();
+            String receivedObject2 = receivedObject.toString();
 
             if (receivedObject2.startsWith("Message:")) {
               System.out.println("Received message: " + receivedObject2);
@@ -53,6 +52,9 @@ public class FortuneServer {
               }
             }
           }
+
+          // Sending something back to client
+
 
           // Sending a message back to the client
           send.println("Server: Message received from client - " + line);

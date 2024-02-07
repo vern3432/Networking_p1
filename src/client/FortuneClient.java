@@ -26,7 +26,7 @@ public class FortuneClient extends JFrame {
     getContentPane().add(panel);
     panel.setLayout(null);
 
-    JLabel messageLabel = new JLabel("Echoe Serversock Message");
+    JLabel messageLabel = new JLabel("Echo Server");
     messageLabel.setBounds(20, 20, 150, 20);
     panel.add(messageLabel);
 
@@ -39,7 +39,7 @@ public class FortuneClient extends JFrame {
     optionsComboBox.setBounds(20, 50, 150, 20);
     panel.add(optionsComboBox);
 
-    JButton sendMessageButton = new JButton("Send Message");
+    JButton sendMessageButton = new JButton("Send Echo");
     sendMessageButton.setBounds(20, 80, 120, 20);
     sendMessageButton.addActionListener(
       new ActionListener() {
