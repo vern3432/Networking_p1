@@ -31,7 +31,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         description="Compile source code">
     <!-- Compile the Java code from ${src} into ${build} -->
 
-      <javac includeantruntime="true"
+      <javac includeantruntime="false"
       srcdir="${src}" destdir="${build}" debug="true"
       debuglevel="lines,vars,source" classpath="lib/merrimackutil.jar">
       <compilerarg value="-Xlint:deprecation,unchecked" />
@@ -64,6 +64,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
       <zipfileset src="lib/merrimackutil.jar" excludes="META-INF/*.SF" />
     </jar>
   </target>
+
+
+  
 
   <target name="clean"
         description="clean up">
