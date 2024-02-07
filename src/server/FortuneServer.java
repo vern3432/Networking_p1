@@ -1,17 +1,22 @@
 package server;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
-
+import merrimackutil.json.types.*;
+import merrimackutil.json.types.JSONArray;
 public class FortuneServer {
 
   public static void main(String[] args) {
     try {
       ServerSocket server = new ServerSocket(5000);
 
+      File configFile = new File("./config.json");
+      JSONArray test= new JSONArray();
+      
       // Loop forever handling connections.
       while (true) {
         Socket sock = server.accept();
@@ -26,9 +31,7 @@ public class FortuneServer {
 
           System.out.println("Client said: " + line);
 
-          // Storing the received message as an object
           Object receivedObject = line;
-          // Printing the received message
           if (receivedObject instanceof String) {
             String receivedObject2 = receivedObject.toString();
             if (receivedObject2.startsWith("Message:")) {

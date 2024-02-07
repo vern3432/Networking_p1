@@ -31,11 +31,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         description="Compile source code">
     <!-- Compile the Java code from ${src} into ${build} -->
 
-      <javac includeantruntime="false"
-      srcdir="${src}" destdir="${build}" debug="true"
-      debuglevel="lines,vars,source" classpath="lib/merrimackutil.jar">
-      <compilerarg value="-Xlint:deprecation,unchecked" />
-    </javac>
+  
   </target>
 
   <target name="dist" depends="compile"
@@ -43,7 +39,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     <!-- Create the distribution directory -->
     <mkdir dir="${dist}"/>
     <path id="project.classpath">
-        <pathelement location="lib/merrimackutil.jar"/>
         <!-- Add other JAR files or directories here if needed -->
     </path>
     <!-- Assemble the client -->
@@ -52,7 +47,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
       <manifest>
         <attribute name="Main-Class" value="client.FortuneClient" />
       </manifest>
-      <zipfileset src="lib/merrimackutil.jar" excludes="META-INF/*.SF" />
     </jar>
 
     <!-- Assemble the server -->
@@ -61,7 +55,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
       <manifest>
         <attribute name="Main-Class" value="server.FortuneServer" />
       </manifest>
-      <zipfileset src="lib/merrimackutil.jar" excludes="META-INF/*.SF" />
     </jar>
   </target>
 

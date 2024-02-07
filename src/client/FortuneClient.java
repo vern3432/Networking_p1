@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 import javax.swing.*;
+import merrimackutil.json.*;;
 
 public class FortuneClient extends JFrame {
 
