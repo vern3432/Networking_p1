@@ -20,7 +20,6 @@ public class FortuneServer {
 
         Scanner recv = new Scanner(sock.getInputStream());
         PrintWriter send = new PrintWriter(sock.getOutputStream(), true);
-
         while (true) {
           String line = recv.nextLine();
 
@@ -31,9 +30,10 @@ public class FortuneServer {
 
           // Printing the received message
           if (receivedObject instanceof String) {
-            String receivedObject2=receivedObject.toString();
+            String receivedObject2 = receivedObject.toString();
 
             if (receivedObject2.startsWith("Message:")) {
+
               System.out.println("Received message: " + receivedObject2);
             } else if (receivedObject2.startsWith("TYPE:")) {
               if (receivedObject2.endsWith("Random by Author")) {
@@ -44,7 +44,8 @@ public class FortuneServer {
             }
           }
 
-          // Sending a message back to the client
+          // Sending something back to client
+          
           send.println("Server: Message received from client - " + line);
 
           if (line.equalsIgnoreCase("exit")) {
