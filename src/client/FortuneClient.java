@@ -88,8 +88,7 @@ public class FortuneClient extends JFrame {
     String message = messageField.getText();
     String selectedOption = (String) optionsComboBox.getSelectedItem();
     if (!message.isEmpty()) {
-      sender.println("Message:" + message)
-      
+      sender.println("Message:" + message);
       showSuccessMessage();
       // get response from server and display it
       String response = receiver.nextLine();
