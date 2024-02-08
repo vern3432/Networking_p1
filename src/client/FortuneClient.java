@@ -76,6 +76,8 @@ public class FortuneClient extends JFrame {
 
     responseArea = new JTextArea();
     responseArea.setBounds(20, 110, 340, 130);
+    responseArea.setLineWrap(true);
+
     responseArea.setEditable(false);
     panel.add(responseArea);
   }

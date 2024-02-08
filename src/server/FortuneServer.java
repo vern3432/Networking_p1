@@ -9,22 +9,44 @@ import java.lang.Double;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 import merrimackutil.json.JsonIO;
 import merrimackutil.json.types.*;
 
+
 public class FortuneServer {
+
 
   public static ArrayList<String> getAllAuthors(
     HashMap<String, List<String>> quotesByAuthor
   ) {
     ArrayList<String> authorNames = new ArrayList<>(quotesByAuthor.keySet());
     return authorNames;
+  }
+
+  // Method to get a random quote by a specific author
+
+    public static String getRandomAuthor(ArrayList<String> authorNames){
+
+      return authorNames.get(new Random().nextInt(authorNames.size()));
+
+    }
+
+
+
+  public static String getRandomQuoteByAuthor(
+    HashMap<String, List<String>> quotesByAuthor,
+    String author
+  ) {
+    // Get the list of quotes by the specified author
+    List<String> quotesList = quotesByAuthor.get(author);
+
+    // If author exists and has quotes, return a random quote
+    if (quotesList != null && !quotesList.isEmpty()) {
+      Random rand = new Random();
+      return quotesList.get(rand.nextInt(quotesList.size()));
+    } else {
+      return "Author not found or no quotes available";
+    }
   }
 
   public static void main(String[] args) {
@@ -77,6 +99,8 @@ public class FortuneServer {
         }
       }
       //printing db by author
+
+      
       for (Map.Entry<String, List<String>> entry : quotesByAuthor.entrySet()) {
         String author = entry.getKey();
         List<String> quotesList = entry.getValue();
@@ -113,19 +137,30 @@ public class FortuneServer {
           if (receivedObject instanceof String) {
             String receivedObject2 = receivedObject.toString();
             if (receivedObject2.startsWith("Message:")) {
+              send.println("Server: Message received from client - " + line);
+
               System.out.println("Received message: " + receivedObject2);
             } else if (receivedObject2.startsWith("TYPE:")) {
               if (receivedObject2.endsWith("Random by Author")) {
+
                 System.out.println("Running Random By Author");
+
+                String Temp = getRandomQuoteByAuthor(
+                  quotesByAuthor,
+                  "Oprah Winfrey"
+                );
+                send.println(Temp);
               } else if (receivedObject2.endsWith("Random")) {
+                
                 System.out.println("Running Standard Random ");
+                String author=getRandomAuthor(authorNames);
+                String Quote=getRandomQuoteByAuthor(quotesByAuthor,author);
+                send.println(Quote);
               }
             }
           }
 
           // Sending something back to client
-
-          send.println("Server: Message received from client - " + line);
 
           if (line.equalsIgnoreCase("exit")) {
             break;
