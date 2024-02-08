@@ -30,6 +30,7 @@ public class FortuneServer {
   public static void main(String[] args) {
     try {
       String configFilePath = "src/server/config.json";
+      
       File configFile = new File(configFilePath);
       try (
         BufferedReader br = new BufferedReader(new FileReader(configFilePath))

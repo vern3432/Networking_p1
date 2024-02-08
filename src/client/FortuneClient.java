@@ -1,13 +1,17 @@
 package client;
 
 import java.awt.event.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 import javax.swing.*;
-import merrimackutil.json.*;;
+import merrimackutil.json.*;
+import merrimackutil.json.JsonIO;
+import merrimackutil.json.types.JSONObject;
 
 public class FortuneClient extends JFrame {
 
@@ -117,7 +121,26 @@ public class FortuneClient extends JFrame {
     responseArea.append(response + "\n");
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws FileNotFoundException {
+    String configFilePath = "src/client/config.json";
+    File configFile = new File(configFilePath);
+    JSONObject configJsonObject = JsonIO.readObject(configFile);
+    @SuppressWarnings("deprecation")
+    Double port = new Double(configJsonObject.get("server-port").toString());
+    int portint = port.intValue();
+    System.out.println("Config port:"+Integer.toString(portint));
+    String server_address = configJsonObject.get("server-address").toString();
+    System.out.println("Config Adress:"+server_address);
+    
+    
+    
+    //server-address
+    ///server-port
+    //server-address
+    ///server-port
+
+
+    //start swing
     SwingUtilities.invokeLater(
       new Runnable() {
         public void run() {
