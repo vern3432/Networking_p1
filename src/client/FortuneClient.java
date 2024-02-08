@@ -30,6 +30,7 @@ public class FortuneClient extends JFrame {
     JPanel panel = new JPanel();
     getContentPane().add(panel);
     panel.setLayout(null);
+    // panel.setIconImage(img.getImage());
 
     JLabel messageLabel = new JLabel("Echo Server");
     messageLabel.setBounds(20, 20, 150, 20);
@@ -122,6 +123,12 @@ public class FortuneClient extends JFrame {
   }
 
   public static void main(String[] args) throws FileNotFoundException {
+    String icon1_path="src/client/forutune_icon.png";
+    String icon2_path="src/client/forutune_icon2.png";
+    ImageIcon icon1 = new ImageIcon(icon1_path);
+    ImageIcon icon2 = new ImageIcon(icon2_path);
+    // FortuneClient.setIconImage(icon1);
+
     String configFilePath = "src/client/config.json";
     File configFile = new File(configFilePath);
     JSONObject configJsonObject = JsonIO.readObject(configFile);
