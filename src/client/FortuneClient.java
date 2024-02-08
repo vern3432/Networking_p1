@@ -127,7 +127,7 @@ public class FortuneClient extends JFrame {
     JSONObject configJsonObject = JsonIO.readObject(configFile);
     @SuppressWarnings("deprecation")
     Double port = new Double(configJsonObject.get("server-port").toString());
-    int portint = port.intValue();
+     int portint = port.intValue();
     System.out.println("Config port:"+Integer.toString(portint));
     String server_address = configJsonObject.get("server-address").toString();
     System.out.println("Config Adress:"+server_address);
@@ -146,15 +146,15 @@ public class FortuneClient extends JFrame {
         public void run() {
           FortuneClient client = new FortuneClient();
           client.setVisible(true);
-          client.connectToServer();
+          client.connectToServer(portint,server_address);
         }
       }
     );
   }
-
-  private void connectToServer() {
+  
+  private void connectToServer(int portint,String server_address) {
     try {
-      socket = new Socket("127.0.0.1", 5000);
+      socket = new Socket(server_address, portint);
       // ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
       // System.out.println("object:");
       receiver = new Scanner(socket.getInputStream());
