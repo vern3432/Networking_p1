@@ -28,7 +28,7 @@ public class FortuneClient extends JFrame {
   public FortuneClient() {
     // this.setIconImage(getIconImage("src/client/16.png"));
     setTitle("Fortune Client");
-    setSize(400, 300);
+    setSize(400, 550);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     // this.setIconImage(getIconImage("src/client/16.png"));
 
@@ -75,18 +75,21 @@ public class FortuneClient extends JFrame {
     panel.add(sendTypeButton);
 
     responseArea = new JTextArea();
-    responseArea.setBounds(20, 110, 340, 130);
+    responseArea.setBounds(20, 110, 340, 400);
     responseArea.setLineWrap(true);
-
+    responseArea.setWrapStyleWord(true);
+    // JScrollPane sPane=new JScrollPane(responseArea);
     responseArea.setEditable(false);
     panel.add(responseArea);
+    // panel.add(sPane);
   }
 
   private void sendMessage() {
     String message = messageField.getText();
     String selectedOption = (String) optionsComboBox.getSelectedItem();
     if (!message.isEmpty()) {
-      sender.println("Message:" + message);
+      sender.println("Message:" + message)
+      
       showSuccessMessage();
       // get response from server and display it
       String response = receiver.nextLine();
