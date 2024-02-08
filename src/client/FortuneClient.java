@@ -1,5 +1,6 @@
 package client;
 
+import java.awt.Image;
 import java.awt.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,6 +8,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import javax.swing.*;
 import merrimackutil.json.*;
@@ -23,12 +26,16 @@ public class FortuneClient extends JFrame {
   private PrintWriter sender;
 
   public FortuneClient() {
+    // this.setIconImage(getIconImage("src/client/16.png"));
     setTitle("Fortune Client");
     setSize(400, 300);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    // this.setIconImage(getIconImage("src/client/16.png"));
 
     JPanel panel = new JPanel();
+
     getContentPane().add(panel);
+
     panel.setLayout(null);
     // panel.setIconImage(img.getImage());
 
@@ -123,12 +130,12 @@ public class FortuneClient extends JFrame {
   }
 
   public static void main(String[] args) throws FileNotFoundException {
-    String icon1_path="src/client/forutune_icon.png";
-    String icon2_path="src/client/forutune_icon2.png";
+    String icon1_path = "src/client/forutune_icon.png";
+    String icon2_path = "src/client/forutune_icon2.png";
     ImageIcon icon1 = new ImageIcon(icon1_path);
+    Image icon1Image = icon1.getImage();
     ImageIcon icon2 = new ImageIcon(icon2_path);
     // FortuneClient.setIconImage(icon1);
-
     String configFilePath = "src/client/config.json";
     File configFile = new File(configFilePath);
     JSONObject configJsonObject = JsonIO.readObject(configFile);
@@ -148,7 +155,14 @@ public class FortuneClient extends JFrame {
     SwingUtilities.invokeLater(
       new Runnable() {
         public void run() {
+          List<Image> icons = new ArrayList<Image>();
+          // icons.add(new ImageIcon("src/client/16.png").getImage());
+          // icons.add(new ImageIcon("src/client/32.png").getImage());
+          // JLabel myLabel = new JLabel(new ImageIcon("src/client/16.png"));
+
           FortuneClient client = new FortuneClient();
+          client.setIconImages(icons);
+          client.setIconImage(icon1Image);
           client.setVisible(true);
           client.connectToServer(portint, server_address);
         }
