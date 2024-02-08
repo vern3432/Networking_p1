@@ -78,11 +78,11 @@ public class FortuneClient extends JFrame {
     if (!message.isEmpty()) {
       sender.println("Message:" + message);
       showSuccessMessage();
-      // Receive response from server and display it
+      // get response from server and display it
       String response = receiver.nextLine();
-      // Storing the received message as an object
+      // store the received message as an object
       Object receivedObject = response;
-      // Printing the received message
+      // println the received message
       System.out.println("Received message: " + receivedObject);
       displayResponse(response);
     } else {
@@ -127,18 +127,15 @@ public class FortuneClient extends JFrame {
     JSONObject configJsonObject = JsonIO.readObject(configFile);
     @SuppressWarnings("deprecation")
     Double port = new Double(configJsonObject.get("server-port").toString());
-     int portint = port.intValue();
-    System.out.println("Config port:"+Integer.toString(portint));
+    int portint = port.intValue();
+    System.out.println("Config port:" + Integer.toString(portint));
     String server_address = configJsonObject.get("server-address").toString();
-    System.out.println("Config Adress:"+server_address);
-    
-    
-    
-    //server-address
-    ///server-port
-    //server-address
-    ///server-port
+    System.out.println("Config Adress:" + server_address);
 
+    //server-address
+    ///server-port
+    //server-address
+    ///server-port
 
     //start swing
     SwingUtilities.invokeLater(
@@ -146,13 +143,13 @@ public class FortuneClient extends JFrame {
         public void run() {
           FortuneClient client = new FortuneClient();
           client.setVisible(true);
-          client.connectToServer(portint,server_address);
+          client.connectToServer(portint, server_address);
         }
       }
     );
   }
-  
-  private void connectToServer(int portint,String server_address) {
+
+  private void connectToServer(int portint, String server_address) {
     try {
       socket = new Socket(server_address, portint);
       // ObjectInputStream in = new ObjectInputStream(socket.getInputStream());

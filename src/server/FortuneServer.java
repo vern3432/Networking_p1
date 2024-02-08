@@ -11,7 +11,7 @@ import java.net.Socket;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashMap; 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -30,7 +30,7 @@ public class FortuneServer {
   public static void main(String[] args) {
     try {
       String configFilePath = "src/server/config.json";
-      
+
       File configFile = new File(configFilePath);
       try (
         BufferedReader br = new BufferedReader(new FileReader(configFilePath))
@@ -88,7 +88,6 @@ public class FortuneServer {
         }
       }
       ArrayList<String> authorNames = getAllAuthors(quotesByAuthor);
-
 
       //map/values gives you all values as list, just do this as random
       //quotes
