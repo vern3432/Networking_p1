@@ -55,14 +55,14 @@ public class FortuneClient extends JFrame {
     optionsComboBox.setBounds(20, 50, 150, 20);
     panel.add(optionsComboBox);
 
-    authorsComboBox = new JComboBox<>(); // Dropdown menu for authors
+    authorsComboBox = new JComboBox<>(); 
     authorsComboBox.setBounds(20, 80, 150, 20);
-    authorsComboBox.setEnabled(false); // Disabled initially
+    authorsComboBox.setEnabled(false); 
     panel.add(authorsComboBox);
 
-    sendAuthorButton = new JButton("Send Author"); // Button to send author name
+    sendAuthorButton = new JButton("Send Author"); 
     sendAuthorButton.setBounds(180, 80, 120, 20);
-    sendAuthorButton.setEnabled(false); // Disabled initially
+    sendAuthorButton.setEnabled(false); 
     sendAuthorButton.addActionListener(
       new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -144,8 +144,8 @@ public class FortuneClient extends JFrame {
       for (String author : authorsList) {
         authorsComboBox.addItem(author);
       }
-      authorsComboBox.setEnabled(true); // Enable the author selection
-      sendAuthorButton.setEnabled(true); // Enable the send author button
+      authorsComboBox.setEnabled(true); // enable the author selection
+      sendAuthorButton.setEnabled(true); 
     } else if (receivedObject.startsWith("Quotes_Sent:")) {
       
       receivedObject = receivedObject.replace("Quotes_Sent:", "");
