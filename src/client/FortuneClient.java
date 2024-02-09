@@ -32,18 +32,15 @@ public class FortuneClient extends JFrame {
   private PrintWriter sender;
 
   public FortuneClient() {
-    // this.setIconImage(getIconImage("src/client/16.png"));
     setTitle("Fortune Client");
     setSize(400, 550);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    // this.setIconImage(getIconImage("src/client/16.png"));
 
     JPanel panel = new JPanel();
 
     getContentPane().add(panel);
 
     panel.setLayout(null);
-    // panel.setIconImage(img.getImage());
 
     JLabel messageLabel = new JLabel("Echo Server");
     messageLabel.setBounds(20, 20, 150, 20);
@@ -60,12 +57,13 @@ public class FortuneClient extends JFrame {
 
     authorsComboBox = new JComboBox<>(); // Dropdown menu for authors
     authorsComboBox.setBounds(20, 80, 150, 20);
+    authorsComboBox.setEnabled(false); // Disabled initially
     panel.add(authorsComboBox);
 
     sendAuthorButton = new JButton("Send Author"); // Button to send author name
     sendAuthorButton.setBounds(180, 80, 120, 20);
+    sendAuthorButton.setEnabled(false); // Disabled initially
     sendAuthorButton.addActionListener(
-
       new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           sendAuthor();
@@ -100,10 +98,8 @@ public class FortuneClient extends JFrame {
     responseArea.setBounds(20, 140, 340, 370);
     responseArea.setLineWrap(true);
     responseArea.setWrapStyleWord(true);
-    // JScrollPane sPane=new JScrollPane(responseArea);
     responseArea.setEditable(false);
     panel.add(responseArea);
-    // panel.add(sPane);
   }
 
   private void sendMessage() {
@@ -112,11 +108,8 @@ public class FortuneClient extends JFrame {
     if (!message.isEmpty()) {
       sender.println("Message:" + message);
       showSuccessMessage();
-      // get response from server and display it
       String response = receiver.nextLine();
-      // store the received message as an object
       Object receivedObject = response;
-      // println the received message
       System.out.println("Received message: " + receivedObject);
       displayResponse(response);
     } else {
@@ -133,31 +126,24 @@ public class FortuneClient extends JFrame {
     String selectedOption = (String) optionsComboBox.getSelectedItem();
     sender.println("TYPE:" + selectedOption);
     showSuccessMessage();
-    // Receive response from server and display it
     String response = receiver.nextLine();
-    // Storing the received message as an object
     String receivedObject = response;
-    // Printing the received message
     if (receivedObject.startsWith("Authors_JSON:")) {
-      //condition where client receives list of authors 
       System.out.println("Authors received");
       receivedObject=receivedObject.replace("Authors_JSON:", "");
       JSONParser parser = new JSONParser(receivedObject);
       JSONArray authorsJsonArray = JsonIO.readArray(receivedObject);
-      
-      // Sort authors alphabetically by the first character
       ArrayList<String> authorsList = new ArrayList<>();
       for (int i = 0; i < authorsJsonArray.size(); i++) {
         authorsList.add(authorsJsonArray.get(i).toString());
       }
       Collections.sort(authorsList);
-      
-      // Populate authors dropdown menu
       authorsComboBox.removeAllItems();
       for (String author : authorsList) {
         authorsComboBox.addItem(author);
       }
-
+      authorsComboBox.setEnabled(true); // Enable the author selection
+      sendAuthorButton.setEnabled(true); // Enable the send author button
     } else {
       System.out.println(receivedObject.startsWith("Authors_JSON:"));
       System.out.println("Received message: " + receivedObject);
@@ -170,12 +156,8 @@ public class FortuneClient extends JFrame {
     String selectedAuthor = (String) authorsComboBox.getSelectedItem();
     sender.println("Author_Request:" + selectedAuthor);
     showSuccessMessage();
-    showSuccessMessage();
-    // get response from server and display it
     String response = receiver.nextLine();
-    // store the received message as an object
     Object receivedObject = response;
-    // println the received message
     System.out.println("Received message: " + receivedObject);
     displayResponse(response);
   }
@@ -199,7 +181,6 @@ public class FortuneClient extends JFrame {
     ImageIcon icon1 = new ImageIcon(icon1_path);
     Image icon1Image = icon1.getImage();
     ImageIcon icon2 = new ImageIcon(icon2_path);
-    // FortuneClient.setIconImage(icon1);
     String configFilePath = "src/client/config.json";
     File configFile = new File(configFilePath);
     JSONObject configJsonObject = JsonIO.readObject(configFile);
@@ -209,21 +190,10 @@ public class FortuneClient extends JFrame {
     System.out.println("Config port:" + Integer.toString(portint));
     String server_address = configJsonObject.get("server-address").toString();
     System.out.println("Config Adress:" + server_address);
-
-    //server-address
-    ///server-port
-    //server-address
-    ///server-port
-
-    //start swing
     SwingUtilities.invokeLater(
       new Runnable() {
         public void run() {
           List<Image> icons = new ArrayList<Image>();
-          // icons.add(new ImageIcon("src/client/16.png").getImage());
-          // icons.add(new ImageIcon("src/client/32.png").getImage());
-          // JLabel myLabel = new JLabel(new ImageIcon("src/client/16.png"));
-
           FortuneClient client = new FortuneClient();
           client.setIconImages(icons);
           client.setIconImage(icon1Image);
@@ -237,8 +207,6 @@ public class FortuneClient extends JFrame {
   private void connectToServer(int portint, String server_address) {
     try {
       socket = new Socket(server_address, portint);
-      // ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-      // System.out.println("object:");
       receiver = new Scanner(socket.getInputStream());
       sender = new PrintWriter(socket.getOutputStream(), true);
     } catch (IOException e) {
