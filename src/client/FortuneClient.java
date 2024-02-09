@@ -16,9 +16,9 @@ import javax.swing.*;
 import merrimackutil.json.*;
 import merrimackutil.json.JsonIO;
 import merrimackutil.json.parser.JSONParser;
+import merrimackutil.json.parser.JSONParser;
 import merrimackutil.json.types.JSONArray;
 import merrimackutil.json.types.JSONObject;
-import merrimackutil.json.parser.JSONParser;
 
 public class FortuneClient extends JFrame {
 
@@ -128,10 +128,11 @@ public class FortuneClient extends JFrame {
     showSuccessMessage();
     String response = receiver.nextLine();
     String receivedObject = response;
+
     if (receivedObject.startsWith("Authors_JSON:")) {
       System.out.println("Authors received");
-      receivedObject=receivedObject.replace("Authors_JSON:", "");
-      JSONParser parser = new JSONParser(receivedObject);
+      receivedObject = receivedObject.replace("Authors_JSON:", "");
+      // JSONParser parser = new JSONParser(receivedObject);
       JSONArray authorsJsonArray = JsonIO.readArray(receivedObject);
       ArrayList<String> authorsList = new ArrayList<>();
       for (int i = 0; i < authorsJsonArray.size(); i++) {
@@ -144,12 +145,28 @@ public class FortuneClient extends JFrame {
       }
       authorsComboBox.setEnabled(true); // Enable the author selection
       sendAuthorButton.setEnabled(true); // Enable the send author button
+    } else if (receivedObject.startsWith("Quotes_Sent:")) {
+      
+      receivedObject = receivedObject.replace("Quotes_Sent:", "");
+      JSONArray authorsJsonArray = JsonIO.readArray(receivedObject);
+      ArrayList<String> authorsList = new ArrayList<>();
+      String forDisplayString =
+        "Author:" +
+        authorsJsonArray.getString(0) +
+        "\n" +
+        "Quote:" +
+        "\n" +
+        authorsJsonArray.getString(1);
+
+
+      displayResponse(forDisplayString);
+
     } else {
+      System.out.println("the else for send type caught ");
       System.out.println(receivedObject.startsWith("Authors_JSON:"));
       System.out.println("Received message: " + receivedObject);
       displayResponse(response);
     }
-
   }
 
   private void sendAuthor() {
@@ -157,9 +174,26 @@ public class FortuneClient extends JFrame {
     sender.println("Author_Request:" + selectedAuthor);
     showSuccessMessage();
     String response = receiver.nextLine();
-    Object receivedObject = response;
-    System.out.println("Received message: " + receivedObject);
-    displayResponse(response);
+    String receivedObject = response;
+    if (receivedObject.startsWith("Quotes_Sent:")) {
+      receivedObject = receivedObject.replace("Quotes_Sent:", "");
+      JSONArray authorsJsonArray = JsonIO.readArray(receivedObject);
+      ArrayList<String> authorsList = new ArrayList<>();
+      String forDisplayString =
+        "Author:" +
+        authorsJsonArray.getString(0) +
+        "\n" +
+        "Quote:" +
+        "\n" +
+        authorsJsonArray.getString(1);
+
+
+      displayResponse(forDisplayString);
+      
+    } else {
+      System.out.println("Received message: " + receivedObject);
+      displayResponse(response);
+    }
   }
 
   private void showSuccessMessage() {

@@ -22,20 +22,29 @@ public class FortuneServer {
     return authorNames;
   }
 
-  // Method to get a random quote by a specific author
+  // function  to get a random quote by a specific author
 
   public static String getRandomAuthor(ArrayList<String> authorNames) {
     return authorNames.get(new Random().nextInt(authorNames.size()));
   }
 
+      public static void sendQuote(String Author, String Quote,PrintWriter send){
+        System.out.println("Sending Quote by:"+Author);
+        JSONArray quoteJsonArray=new JSONArray();
+        quoteJsonArray.add(Author);
+        quoteJsonArray.add(Quote);
+        send.println("Quotes_Sent:"+quoteJsonArray.toJSON());
+
+      } 
+
   public static String getRandomQuoteByAuthor(
     HashMap<String, List<String>> quotesByAuthor,
     String author
   ) {
-    // Get the list of quotes by the specified author
+    // get the list of quotes by the specified author
     List<String> quotesList = quotesByAuthor.get(author);
 
-    // If author exists and has quotes, return a random quote
+    // if author exists and has quotes, return a random quote
     if (quotesList != null && !quotesList.isEmpty()) {
       Random rand = new Random();
       return quotesList.get(rand.nextInt(quotesList.size()));
@@ -113,7 +122,7 @@ public class FortuneServer {
       //start server after proccessing
       ServerSocket server = new ServerSocket(portint);
       System.out.println("Server Running at port:" + portint);
-      // loop forever handling connections.(Integer)
+      // loop forever thingy, handling connections.(Integer) dies if connection lost. need to fix that  
       while (true) {
         Socket sock = server.accept();
 
@@ -139,7 +148,8 @@ public class FortuneServer {
                 quotesByAuthor,
                 receivedObject2
               );
-              send.println(Temp);
+              sendQuote(receivedObject2,Temp,send);
+              
             } else if (receivedObject2.startsWith("TYPE:")) {
               if (receivedObject2.endsWith("Random by Author")) {
                 System.out.println("Running Random By Author");
@@ -153,12 +163,11 @@ public class FortuneServer {
                 System.out.println("Running Standard Random ");
                 String author = getRandomAuthor(authorNames);
                 String Quote = getRandomQuoteByAuthor(quotesByAuthor, author);
-                send.println(Quote);
+              sendQuote(author,Quote,send);
               }
             }
           }
 
-          // Sending something back to client
 
           if (line.equalsIgnoreCase("exit")) {
             break;
