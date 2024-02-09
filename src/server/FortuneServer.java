@@ -9,12 +9,11 @@ import java.lang.Double;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
+import merrimackutil.json.JSONSerializable;
 import merrimackutil.json.JsonIO;
 import merrimackutil.json.types.*;
 
-
 public class FortuneServer {
-
 
   public static ArrayList<String> getAllAuthors(
     HashMap<String, List<String>> quotesByAuthor
@@ -25,13 +24,9 @@ public class FortuneServer {
 
   // Method to get a random quote by a specific author
 
-    public static String getRandomAuthor(ArrayList<String> authorNames){
-
-      return authorNames.get(new Random().nextInt(authorNames.size()));
-
-    }
-
-
+  public static String getRandomAuthor(ArrayList<String> authorNames) {
+    return authorNames.get(new Random().nextInt(authorNames.size()));
+  }
 
   public static String getRandomQuoteByAuthor(
     HashMap<String, List<String>> quotesByAuthor,
@@ -100,7 +95,6 @@ public class FortuneServer {
       }
       //printing db by author
 
-      
       for (Map.Entry<String, List<String>> entry : quotesByAuthor.entrySet()) {
         String author = entry.getKey();
         List<String> quotesList = entry.getValue();
@@ -130,31 +124,35 @@ public class FortuneServer {
 
         while (true) {
           String line = recv.nextLine();
-
           System.out.println("Client said: " + line);
-
           Object receivedObject = line;
           if (receivedObject instanceof String) {
             String receivedObject2 = receivedObject.toString();
             if (receivedObject2.startsWith("Message:")) {
               send.println("Server: Message received from client - " + line);
-
               System.out.println("Received message: " + receivedObject2);
+            } else if (receivedObject2.startsWith("Author_Request:")) {
+              receivedObject2=receivedObject2.replace("Author_Request:", "");
+              System.out.println(receivedObject2);
+              System.out.println("Author request");
+              String Temp = getRandomQuoteByAuthor(
+                quotesByAuthor,
+                receivedObject2
+              );
+              send.println(Temp);
             } else if (receivedObject2.startsWith("TYPE:")) {
               if (receivedObject2.endsWith("Random by Author")) {
-
                 System.out.println("Running Random By Author");
-
-                String Temp = getRandomQuoteByAuthor(
-                  quotesByAuthor,
-                  "Oprah Winfrey"
-                );
-                send.println(Temp);
+                // String seraial= JSONSerializable.serialize((Object)authorNames);
+                JSONArray authors_JsonArray = new JSONArray();
+                for (int i = 0; i < authorNames.size(); i++) {
+                  authors_JsonArray.add(authorNames.get(i));
+                }
+                send.println("Authors_JSON:" + authors_JsonArray.toJSON());
               } else if (receivedObject2.endsWith("Random")) {
-                
                 System.out.println("Running Standard Random ");
-                String author=getRandomAuthor(authorNames);
-                String Quote=getRandomQuoteByAuthor(quotesByAuthor,author);
+                String author = getRandomAuthor(authorNames);
+                String Quote = getRandomQuoteByAuthor(quotesByAuthor, author);
                 send.println(Quote);
               }
             }

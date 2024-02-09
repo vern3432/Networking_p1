@@ -9,18 +9,24 @@ import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collections; // Added for sorting
 import java.util.List;
 import java.util.Scanner;
 import javax.swing.*;
 import merrimackutil.json.*;
 import merrimackutil.json.JsonIO;
+import merrimackutil.json.parser.JSONParser;
+import merrimackutil.json.types.JSONArray;
 import merrimackutil.json.types.JSONObject;
+import merrimackutil.json.parser.JSONParser;
 
 public class FortuneClient extends JFrame {
 
   private JTextField messageField;
   private JTextArea responseArea;
   private JComboBox<String> optionsComboBox;
+  private JComboBox<String> authorsComboBox; // Added dropdown menu for authors
+  private JButton sendAuthorButton; // Added button to send author name
   private Socket socket;
   private Scanner receiver;
   private PrintWriter sender;
@@ -52,8 +58,24 @@ public class FortuneClient extends JFrame {
     optionsComboBox.setBounds(20, 50, 150, 20);
     panel.add(optionsComboBox);
 
+    authorsComboBox = new JComboBox<>(); // Dropdown menu for authors
+    authorsComboBox.setBounds(20, 80, 150, 20);
+    panel.add(authorsComboBox);
+
+    sendAuthorButton = new JButton("Send Author"); // Button to send author name
+    sendAuthorButton.setBounds(180, 80, 120, 20);
+    sendAuthorButton.addActionListener(
+
+      new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          sendAuthor();
+        }
+      }
+    );
+    panel.add(sendAuthorButton);
+
     JButton sendMessageButton = new JButton("Send Echo");
-    sendMessageButton.setBounds(20, 80, 120, 20);
+    sendMessageButton.setBounds(20, 110, 120, 20);
     sendMessageButton.addActionListener(
       new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -64,7 +86,7 @@ public class FortuneClient extends JFrame {
     panel.add(sendMessageButton);
 
     JButton sendTypeButton = new JButton("Send Type");
-    sendTypeButton.setBounds(150, 80, 120, 20);
+    sendTypeButton.setBounds(180, 110, 120, 20);
     sendTypeButton.addActionListener(
       new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -75,7 +97,7 @@ public class FortuneClient extends JFrame {
     panel.add(sendTypeButton);
 
     responseArea = new JTextArea();
-    responseArea.setBounds(20, 110, 340, 400);
+    responseArea.setBounds(20, 140, 340, 370);
     responseArea.setLineWrap(true);
     responseArea.setWrapStyleWord(true);
     // JScrollPane sPane=new JScrollPane(responseArea);
@@ -114,8 +136,46 @@ public class FortuneClient extends JFrame {
     // Receive response from server and display it
     String response = receiver.nextLine();
     // Storing the received message as an object
-    Object receivedObject = response;
+    String receivedObject = response;
     // Printing the received message
+    if (receivedObject.startsWith("Authors_JSON:")) {
+      //condition where client receives list of authors 
+      System.out.println("Authors received");
+      receivedObject=receivedObject.replace("Authors_JSON:", "");
+      JSONParser parser = new JSONParser(receivedObject);
+      JSONArray authorsJsonArray = JsonIO.readArray(receivedObject);
+      
+      // Sort authors alphabetically by the first character
+      ArrayList<String> authorsList = new ArrayList<>();
+      for (int i = 0; i < authorsJsonArray.size(); i++) {
+        authorsList.add(authorsJsonArray.get(i).toString());
+      }
+      Collections.sort(authorsList);
+      
+      // Populate authors dropdown menu
+      authorsComboBox.removeAllItems();
+      for (String author : authorsList) {
+        authorsComboBox.addItem(author);
+      }
+
+    } else {
+      System.out.println(receivedObject.startsWith("Authors_JSON:"));
+      System.out.println("Received message: " + receivedObject);
+      displayResponse(response);
+    }
+
+  }
+
+  private void sendAuthor() {
+    String selectedAuthor = (String) authorsComboBox.getSelectedItem();
+    sender.println("Author_Request:" + selectedAuthor);
+    showSuccessMessage();
+    showSuccessMessage();
+    // get response from server and display it
+    String response = receiver.nextLine();
+    // store the received message as an object
+    Object receivedObject = response;
+    // println the received message
     System.out.println("Received message: " + receivedObject);
     displayResponse(response);
   }
