@@ -75,7 +75,7 @@ public class FortuneServer {
         configJsonObject.get("pool-size").toString()
       );
       int portint = port.intValue();
-      int pool_sizeint = pool_size.intValue();
+      int poolSizeInt = pool_size.intValue();
       System.out.println(dbFilePath);
       File dbFile = new File(dbFilePath);
       JSONObject db = JsonIO.readObject(dbFile);
@@ -119,7 +119,8 @@ public class FortuneServer {
       //quotes
 
       //start server after proccessing
-      ServerSocket server = new ServerSocket(portint);
+      ServerSocket server = new ServerSocket(portint, poolSizeInt);
+      
       System.out.println("Server Running at port:" + portint);
       // loop forever thingy, handling connections.(Integer) dies if connection lost. need to fix that  
       while (true) {

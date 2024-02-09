@@ -156,7 +156,8 @@ public class FortuneClient extends JFrame {
         "\n" +
         "Quote:" +
         "\n" +
-        authorsJsonArray.getString(1);
+        authorsJsonArray.getString(1)+"\n";
+
 
 
       displayResponse(forDisplayString);
@@ -185,7 +186,7 @@ public class FortuneClient extends JFrame {
         "\n" +
         "Quote:" +
         "\n" +
-        authorsJsonArray.getString(1);
+        authorsJsonArray.getString(1)+"\n";
 
 
       displayResponse(forDisplayString);
