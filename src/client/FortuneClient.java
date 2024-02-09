@@ -9,7 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Collections; // Added for sorting
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import javax.swing.*;
@@ -25,8 +25,8 @@ public class FortuneClient extends JFrame {
   private JTextField messageField;
   private JTextArea responseArea;
   private JComboBox<String> optionsComboBox;
-  private JComboBox<String> authorsComboBox; // Added dropdown menu for authors
-  private JButton sendAuthorButton; // Added button to send author name
+  private JComboBox<String> authorsComboBox; 
+  private JButton sendAuthorButton; 
   private Socket socket;
   private Scanner receiver;
   private PrintWriter sender;

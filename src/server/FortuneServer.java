@@ -175,13 +175,11 @@ public class FortuneServer {
               break;
             }
           } catch (NoSuchElementException e) {
-            // Connection lost, go back to waiting for a new connection
             System.out.println("Connection lost. Waiting for new connection...");
             break;
           }
         }
 
-        // Close the connection.
         sock.close();
       }
     } catch (IOException ioe) {
