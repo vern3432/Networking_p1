@@ -9,6 +9,8 @@ import java.lang.Double;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import merrimackutil.json.JSONSerializable;
 import merrimackutil.json.JsonIO;
 import merrimackutil.json.types.*;
@@ -70,12 +72,20 @@ public class FortuneServer {
         "src/server/" + configJsonObject.get("fortune-database").toString();
       @SuppressWarnings("deprecation")
       Double port = new Double(configJsonObject.get("port").toString());
-      @SuppressWarnings("deprecation")
-      Double pool_size = new Double(
-        configJsonObject.get("pool-size").toString()
-      );
       int portint = port.intValue();
-      int poolSizeInt = pool_size.intValue();
+
+      int poolSizeInt =10;
+
+      try {
+        @SuppressWarnings("deprecation")
+        Double pool_size = new Double(
+          configJsonObject.get("pool-size").toString()
+        );
+         poolSizeInt = pool_size.intValue();
+      } catch (Exception ex) {
+          System.out.println("Pool Size not found. Default: 10");
+          }
+
       System.out.println(dbFilePath);
       File dbFile = new File(dbFilePath);
       JSONObject db = JsonIO.readObject(dbFile);
@@ -113,6 +123,8 @@ public class FortuneServer {
           System.out.println("- " + quote);
         }
       }
+
+      //arraylist of all authors 
       ArrayList<String> authorNames = getAllAuthors(quotesByAuthor);
 
       //map/values gives you all values as list, just do this as random
@@ -120,32 +132,62 @@ public class FortuneServer {
 
       //start server after proccessing
       // port and then pool size
-      ServerSocket server = new ServerSocket(portint, poolSizeInt);
-      
+      ServerSocket server = new ServerSocket(portint);
+
       System.out.println("Server Running at port:" + portint);
-      // loop forever thingy, handling connections.(Integer) dies if connection lost. need to fix that  
+      
+      // Create a thread pool
+      ExecutorService pool = Executors.newFixedThreadPool(poolSizeInt);
+      
+      // loop forever thingy, handling connections.(Integer) dies if connection lost. need to fix that
       while (true) {
         Socket sock = server.accept();
 
         System.out.println("Connection received.");
+        
+        // new connection for each thread 
+        pool.execute(new ConnectionHandler(sock, quotesByAuthor, authorNames));
 
-        Scanner recv = new Scanner(sock.getInputStream());
-        PrintWriter send = new PrintWriter(sock.getOutputStream(), true);
+      }
+    } catch (IOException ioe) {
+      ioe.printStackTrace();
+    }
+  }
+  
+  // sub class to handle each indivual connection
+  static class ConnectionHandler implements Runnable {
+    private Socket socket;
+    private HashMap<String, List<String>> quotesByAuthor;
+    private ArrayList<String> authorNames;
+
+    public ConnectionHandler(Socket socket, HashMap<String, List<String>> quotesByAuthor, ArrayList<String> authorNames) {
+      this.socket = socket;
+      this.quotesByAuthor = quotesByAuthor;
+      this.authorNames = authorNames;
+    }
+
+    @Override
+    public void run() {
+      try {
+        Scanner recv = new Scanner(socket.getInputStream());
+        PrintWriter send = new PrintWriter(socket.getOutputStream(), true);
 
         while (true) {
           try {
             String line = recv.nextLine();
             System.out.println("Client said: " + line);
             Object receivedObject = line;
+
             if (receivedObject instanceof String) {
               String receivedObject2 = receivedObject.toString();
               if (receivedObject2.startsWith("Message:")) {
-                send.println(
-                  "Server: Message received from client - " + line
-                );
+                //case for echoe messsage
+                send.println("Server: Message received from client - " + line);
                 System.out.println("Received message: " + receivedObject2);
               } else if (receivedObject2.startsWith("Author_Request:")) {
-                receivedObject2 = receivedObject2.replace("Author_Request:", "");
+                //condition for requesting by author
+                receivedObject2 =
+                  receivedObject2.replace("Author_Request:", "");
                 System.out.println(receivedObject2);
                 System.out.println("Author request");
                 String Temp = getRandomQuoteByAuthor(
@@ -155,6 +197,7 @@ public class FortuneServer {
                 sendQuote(receivedObject2, Temp, send);
               } else if (receivedObject2.startsWith("TYPE:")) {
                 if (receivedObject2.endsWith("Random by Author")) {
+                  //requesting author names 
                   System.out.println("Running Random By Author");
                   JSONArray authors_JsonArray = new JSONArray();
                   for (int i = 0; i < authorNames.size(); i++) {
@@ -162,12 +205,10 @@ public class FortuneServer {
                   }
                   send.println("Authors_JSON:" + authors_JsonArray.toJSON());
                 } else if (receivedObject2.endsWith("Random")) {
+                  //requesting normal basic random quote 
                   System.out.println("Running Standard Random ");
                   String author = getRandomAuthor(authorNames);
-                  String Quote = getRandomQuoteByAuthor(
-                    quotesByAuthor,
-                    author
-                  );
+                  String Quote = getRandomQuoteByAuthor(quotesByAuthor, author);
                   sendQuote(author, Quote, send);
                 }
               }
@@ -177,15 +218,17 @@ public class FortuneServer {
               break;
             }
           } catch (NoSuchElementException e) {
-            System.out.println("Connection lost. Waiting for new connection...");
+            System.out.println(
+              "Connection lost. Waiting for new connection..."
+            );
             break;
           }
         }
 
-        sock.close();
+        socket.close();
+      } catch (IOException e) {
+        e.printStackTrace();
       }
-    } catch (IOException ioe) {
-      ioe.printStackTrace();
     }
   }
 }
