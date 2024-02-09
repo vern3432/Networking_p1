@@ -12,9 +12,9 @@ How to Use:
 Notes for How to Use:   
     Keep in mind, server must be run first 
     (Ignore Fixed:)If connection is closed. Server will close
-    If server is disconnected, program will fill 
+    If server is disconnected, program will fill(Unable to Fix, but hope to)
                  
 
 Notes for Group: 
 I recomend adding extension: Ant Target Runner
-It made getting the files to run indivdually so much easier. 
+It made getting the files to run indivdually  much easier. 
