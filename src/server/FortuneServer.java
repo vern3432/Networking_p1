@@ -119,6 +119,7 @@ public class FortuneServer {
       //quotes
 
       //start server after proccessing
+      // port and then pool size
       ServerSocket server = new ServerSocket(portint, poolSizeInt);
       
       System.out.println("Server Running at port:" + portint);
