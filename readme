@@ -11,7 +11,8 @@ How to Use:
     Continue Until You Close program
 Notes for How to Use:   
     Keep in mind, server must be run first 
-    If connection is closed. Server will close 
+    (Ignore Fixed:)If connection is closed. Server will close
+    If server is disconnected, program will fill 
                  
 
 Notes for Group: 
