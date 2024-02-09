@@ -25,8 +25,8 @@ public class FortuneClient extends JFrame {
   private JTextField messageField;
   private JTextArea responseArea;
   private JComboBox<String> optionsComboBox;
-  private JComboBox<String> authorsComboBox; 
-  private JButton sendAuthorButton; 
+  private JComboBox<String> authorsComboBox;
+  private JButton sendAuthorButton;
   private Socket socket;
   private Scanner receiver;
   private PrintWriter sender;
@@ -55,14 +55,14 @@ public class FortuneClient extends JFrame {
     optionsComboBox.setBounds(20, 50, 150, 20);
     panel.add(optionsComboBox);
 
-    authorsComboBox = new JComboBox<>(); 
+    authorsComboBox = new JComboBox<>();
     authorsComboBox.setBounds(20, 80, 150, 20);
-    authorsComboBox.setEnabled(false); 
+    authorsComboBox.setEnabled(false);
     panel.add(authorsComboBox);
 
-    sendAuthorButton = new JButton("Send Author"); 
+    sendAuthorButton = new JButton("Send Author");
     sendAuthorButton.setBounds(180, 80, 120, 20);
-    sendAuthorButton.setEnabled(false); 
+    sendAuthorButton.setEnabled(false);
     sendAuthorButton.addActionListener(
       new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -99,9 +99,10 @@ public class FortuneClient extends JFrame {
     responseArea.setLineWrap(true);
     responseArea.setWrapStyleWord(true);
     responseArea.setEditable(false);
-    JScrollPane scrollPane = new JScrollPane(responseArea); 
+    JScrollPane scrollPane = new JScrollPane(responseArea);
     scrollPane.setBounds(20, 140, 340, 370);
-    panel.add(scrollPane);  }
+    panel.add(scrollPane);
+  }
 
   private void sendMessage() {
     String message = messageField.getText();
@@ -145,9 +146,8 @@ public class FortuneClient extends JFrame {
         authorsComboBox.addItem(author);
       }
       authorsComboBox.setEnabled(true); // enable the author selection
-      sendAuthorButton.setEnabled(true); 
+      sendAuthorButton.setEnabled(true);
     } else if (receivedObject.startsWith("Quotes_Sent:")) {
-      
       receivedObject = receivedObject.replace("Quotes_Sent:", "");
       JSONArray authorsJsonArray = JsonIO.readArray(receivedObject);
       ArrayList<String> authorsList = new ArrayList<>();
@@ -157,12 +157,10 @@ public class FortuneClient extends JFrame {
         "\n" +
         "Quote:" +
         "\n" +
-        authorsJsonArray.getString(1)+"\n";
-
-
+        authorsJsonArray.getString(1) +
+        "\n";
 
       displayResponse(forDisplayString);
-
     } else {
       System.out.println("the else for send type caught ");
       System.out.println(receivedObject.startsWith("Authors_JSON:"));
@@ -187,11 +185,10 @@ public class FortuneClient extends JFrame {
         "\n" +
         "Quote:" +
         "\n" +
-        authorsJsonArray.getString(1)+"\n";
-
+        authorsJsonArray.getString(1) +
+        "\n";
 
       displayResponse(forDisplayString);
-      
     } else {
       System.out.println("Received message: " + receivedObject);
       displayResponse(response);

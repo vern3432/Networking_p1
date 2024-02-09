@@ -56,7 +56,6 @@ public class FortuneServer {
 
   public static void main(String[] args) {
     try {
-
       //reading config flies
       String configFilePath = "src/server/config.json";
       File configFile = new File(configFilePath);
@@ -75,22 +74,20 @@ public class FortuneServer {
       Double port = new Double(configJsonObject.get("port").toString());
       int portint = port.intValue();
 
-      int poolSizeInt =10;
+      int poolSizeInt = 10;
 
       try {
         @SuppressWarnings("deprecation")
         Double pool_size = new Double(
           configJsonObject.get("pool-size").toString()
         );
-         poolSizeInt = pool_size.intValue();
+        poolSizeInt = pool_size.intValue();
 
-         System.out.println("Using Pool Size:"+poolSizeInt);
+        System.out.println("Using Pool Size:" + poolSizeInt);
       } catch (Exception ex) {
+        System.out.println("Pool Size not found. Default: 10");
+      }
 
-          System.out.println("Pool Size not found. Default: 10");
-
-          }
-      
       System.out.println(dbFilePath);
       File dbFile = new File(dbFilePath);
       JSONObject db = JsonIO.readObject(dbFile);
@@ -110,7 +107,7 @@ public class FortuneServer {
             quotesList.add(quote);
           }
         } else {
-          // if the author does not exist in the map, create a new list and add the quote to it
+          // if the author does not exist,nor does quote, in the map, create a new list and add the quote to it
           List<String> quotesList = new ArrayList<>();
           quotesList.add(quote);
           quotesByAuthor.put(author, quotesList);
@@ -128,7 +125,7 @@ public class FortuneServer {
         // }
       }
 
-      //arraylist of all authors 
+      //arraylist of all authors
       ArrayList<String> authorNames = getAllAuthors(quotesByAuthor);
 
       //map/values gives you all values as list, just do this as random
@@ -139,32 +136,36 @@ public class FortuneServer {
       ServerSocket server = new ServerSocket(portint);
 
       System.out.println("Server Running at port:" + portint);
-      
+
       // Create a thread pool
       ExecutorService pool = Executors.newFixedThreadPool(poolSizeInt);
-      
+
       // loop forever thingy, handling connections.(Integer) dies if connection lost. need to fix that
       while (true) {
         Socket sock = server.accept();
 
         System.out.println("Connection received.");
-        
-        // new connection for each thread 
-        pool.execute(new Connection_Handler(sock, quotesByAuthor, authorNames));
 
+        // new connection for each thread
+        pool.execute(new Connection_Handler(sock, quotesByAuthor, authorNames));
       }
     } catch (IOException ioe) {
       ioe.printStackTrace();
     }
   }
-  
+
   // sub class to handle each indivual connection
   static class Connection_Handler implements Runnable {
+
     private Socket socket;
     private HashMap<String, List<String>> quotesByAuthor;
     private ArrayList<String> authorNames;
 
-    public Connection_Handler(Socket socket, HashMap<String, List<String>> quotesByAuthor, ArrayList<String> authorNames) {
+    public Connection_Handler(
+      Socket socket,
+      HashMap<String, List<String>> quotesByAuthor,
+      ArrayList<String> authorNames
+    ) {
       this.socket = socket;
       this.quotesByAuthor = quotesByAuthor;
       this.authorNames = authorNames;
@@ -178,7 +179,7 @@ public class FortuneServer {
 
         while (true) {
           try {
-            //recieving and saving next recieved line 
+            //recieving and saving next recieved line
             String line = recv.nextLine();
             System.out.println("Client said: " + line);
             Object receivedObject = line;
@@ -202,7 +203,7 @@ public class FortuneServer {
                 sendQuote(receivedObject2, Temp, send);
               } else if (receivedObject2.startsWith("TYPE:")) {
                 if (receivedObject2.endsWith("Random by Author")) {
-                  //requesting author names 
+                  //requesting author names
                   System.out.println("Running Random By Author");
                   JSONArray authors_JsonArray = new JSONArray();
                   for (int i = 0; i < authorNames.size(); i++) {
@@ -210,7 +211,7 @@ public class FortuneServer {
                   }
                   send.println("Authors_JSON:" + authors_JsonArray.toJSON());
                 } else if (receivedObject2.endsWith("Random")) {
-                  //requesting normal basic random quote 
+                  //requesting normal basic random quote
                   System.out.println("Running Standard Random ");
                   String author = getRandomAuthor(authorNames);
                   String Quote = getRandomQuoteByAuthor(quotesByAuthor, author);
