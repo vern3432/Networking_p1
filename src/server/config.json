@@ -1,5 +1,6 @@
 {
     "port" : 5000,
     "fortune-database" : "server-config/fortunedb.json",
-    "pool-size" : 10
+    "pool-size" : 15
+
 }

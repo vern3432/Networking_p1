@@ -82,10 +82,14 @@ public class FortuneServer {
           configJsonObject.get("pool-size").toString()
         );
          poolSizeInt = pool_size.intValue();
-      } catch (Exception ex) {
-          System.out.println("Pool Size not found. Default: 10");
-          }
 
+         System.out.println("Using Pool Size:"+poolSizeInt);
+      } catch (Exception ex) {
+
+          System.out.println("Pool Size not found. Default: 10");
+
+          }
+      
       System.out.println(dbFilePath);
       File dbFile = new File(dbFilePath);
       JSONObject db = JsonIO.readObject(dbFile);
@@ -116,12 +120,11 @@ public class FortuneServer {
       for (Map.Entry<String, List<String>> entry : quotesByAuthor.entrySet()) {
         String author = entry.getKey();
         List<String> quotesList = entry.getValue();
-
-        System.out.println("Author: " + author);
-        System.out.println("Quotes:");
-        for (String quote : quotesList) {
-          System.out.println("- " + quote);
-        }
+        // System.out.println("Author: " + author);
+        // System.out.println("Quotes:");
+        // for (String quote : quotesList) {
+        //   System.out.println("- " + quote);
+        // }
       }
 
       //arraylist of all authors 
