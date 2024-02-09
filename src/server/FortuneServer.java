@@ -56,8 +56,9 @@ public class FortuneServer {
 
   public static void main(String[] args) {
     try {
-      String configFilePath = "src/server/config.json";
 
+      //reading config flies
+      String configFilePath = "src/server/config.json";
       File configFile = new File(configFilePath);
       try (
         BufferedReader br = new BufferedReader(new FileReader(configFilePath))
@@ -149,7 +150,7 @@ public class FortuneServer {
         System.out.println("Connection received.");
         
         // new connection for each thread 
-        pool.execute(new ConnectionHandler(sock, quotesByAuthor, authorNames));
+        pool.execute(new Connection_Handler(sock, quotesByAuthor, authorNames));
 
       }
     } catch (IOException ioe) {
@@ -158,12 +159,12 @@ public class FortuneServer {
   }
   
   // sub class to handle each indivual connection
-  static class ConnectionHandler implements Runnable {
+  static class Connection_Handler implements Runnable {
     private Socket socket;
     private HashMap<String, List<String>> quotesByAuthor;
     private ArrayList<String> authorNames;
 
-    public ConnectionHandler(Socket socket, HashMap<String, List<String>> quotesByAuthor, ArrayList<String> authorNames) {
+    public Connection_Handler(Socket socket, HashMap<String, List<String>> quotesByAuthor, ArrayList<String> authorNames) {
       this.socket = socket;
       this.quotesByAuthor = quotesByAuthor;
       this.authorNames = authorNames;
@@ -177,6 +178,7 @@ public class FortuneServer {
 
         while (true) {
           try {
+            //recieving and saving next recieved line 
             String line = recv.nextLine();
             System.out.println("Client said: " + line);
             Object receivedObject = line;
@@ -221,6 +223,7 @@ public class FortuneServer {
               break;
             }
           } catch (NoSuchElementException e) {
+            //exception catch for loss of connection with single user
             System.out.println(
               "Connection lost. Waiting for new connection..."
             );
