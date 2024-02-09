@@ -99,8 +99,9 @@ public class FortuneClient extends JFrame {
     responseArea.setLineWrap(true);
     responseArea.setWrapStyleWord(true);
     responseArea.setEditable(false);
-    panel.add(responseArea);
-  }
+    JScrollPane scrollPane = new JScrollPane(responseArea); 
+    scrollPane.setBounds(20, 140, 340, 370);
+    panel.add(scrollPane);  }
 
   private void sendMessage() {
     String message = messageField.getText();
